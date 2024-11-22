@@ -1,3 +1,31 @@
+<?php
+// Include the functions file for login validation
+require_once 'functions.php';
+returPage();    
+// Initialize error message
+$error_message = '';
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Call login function
+    $result = loginUser($email, $password);
+    
+    if ($result === true) {
+        // Redirect to the dashboard if login is successful
+        header(header: "Location: admin/dashboard.php");
+        exit();
+    } else {
+        // Display error message if login failed
+        $error_message = $result; // Error message is generated in the loginUser() function
+    }
+
+   
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +39,9 @@
 <body class="bg-secondary-subtle">
     <div class="d-flex align-items-center justify-content-center vh-100">
         <div class="col-3">
-            <!-- Server-Side Validation Messages should be placed here -->
+        <?php if ($error_message): ?>
+                <?php echo $error_message; ?>
+            <?php endif; ?>
             <div class="card">
                 <div class="card-body">
                     <h1 class="h3 mb-4 fw-normal">Login</h1>
@@ -26,6 +56,7 @@
                         </div>
                         <div class="form-floating mb-3">
                             <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                         
                         </div>
                     </form>
                 </div>
